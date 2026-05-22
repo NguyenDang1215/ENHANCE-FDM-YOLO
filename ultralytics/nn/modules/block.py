@@ -1147,3 +1147,25 @@ class SimAM(nn.Module):
         x_minus_mu_square = (x - x.mean(dim=[2, 3], keepdim=True)).pow(2)
         y = x_minus_mu_square / (4 * (x_minus_mu_square.sum(dim=[2, 3], keepdim=True) / n + self.e_lambda)) + 0.5
         return x * self.activaton(y)
+    
+class TuckerConv(nn.Module):
+    """
+    Tích chập nén Tucker Decomposition tương thích 100% với YOLOv8 parsing.
+    Nén số lượng kênh ở giữa bằng cách lấy trung bình cộng (c1+c2)//2 hoặc nhân tỷ lệ.
+    """
+    # Sử dụng *args và **kwargs để hứng mọi thông số dư thừa
+    def __init__(self, c1, c2, k=3, s=1, rank_ratio=0.5, *args, **kwargs):
+        super().__init__()
+        # Tính toán Rank (số kênh lõi) đảm bảo không bị lỗi mismatch
+        # Dùng rank_ratio để bóp nghẹt, nếu không có thì lấy trung bình
+        core_channels = max(8, int(c2 * rank_ratio)) 
+
+        # Đảm bảo luồng đi chuẩn: c1 -> core_channels -> c2
+        self.tucker_block = nn.Sequential(
+            Conv(c1, core_channels, k=1, s=1),    # 1. Nén đầu vào c1 -> core
+            Conv(core_channels, core_channels, k=k, s=s), # 2. Tích chập lõi (core -> core)
+            Conv(core_channels, c2, k=1, s=1)     # 3. Phóng to xuất ra c2
+        )
+
+    def forward(self, x):
+        return self.tucker_block(x)

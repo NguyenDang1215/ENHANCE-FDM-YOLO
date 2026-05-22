@@ -4,7 +4,7 @@ from ultralytics import YOLO
 
 def test_custom_yolo():
     # Tên file YAML mà bạn đã tạo ở bước trước
-    yaml_path = 'yolo8_goldacsim_fdm_p2_simam.yaml'
+    yaml_path = 'yolo8_goldacsiam_fdm_p2_siam_tucker.yaml'
     
     print("="*60)
     print("🚀 BẮT ĐẦU TEST KIẾN TRÚC FDM-YOLO x GOLDACSIM")

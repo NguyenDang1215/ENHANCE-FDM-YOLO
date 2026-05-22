@@ -57,6 +57,7 @@ from .block import (
     Fast_C2f,
     EMA,
     SimAM,
+    TuckerConv,
 )
 from .conv import (
     SimFusion_4in,
@@ -165,4 +166,5 @@ __all__ = (
     "Fast_C2f",
     "EMA",
     "SimAM",
+    "TuckerConv",
 )
