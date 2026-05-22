@@ -1,6 +1,6 @@
 task: detect
 mode: train
-model: yolo8_goldacsiam_fdm_p2_siam_tucker.yaml
+model: yolo8_tucker_fastc2fbackbone.yaml
 data: coco8.yaml
 epochs: 1
 time: null
